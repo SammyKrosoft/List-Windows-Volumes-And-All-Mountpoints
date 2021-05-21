@@ -9,8 +9,14 @@ Right-Click and chose "Save Link As" to save the current script on your hard dri
 
 # Usage
 
+- To export the volumes, all their mointpoints and the EDB and LOG files stats (can be long):
 ```powershell
-.\ListVolumeAndContents.ps1 -Server "E2016-01" | ft
+ListVolumeAndContents.ps1 -OutputFolder c:\temp\ -Server E2016-01 -CountEDBandLOGs
+```
+
+- To export only the volumes and all their mointpoints (very fast):
+```powershell
+ListVolumeAndContents.ps1 -OutputFolder c:\temp\ -Server E2016-01
 ```
 
 > Hint: type the following on Windows PowerAhell :
@@ -21,8 +27,7 @@ Show-Command .\ListVolumeAndContents.ps1
 
 >And you'll be presented a sort of GUI helping you to fill the parameters and directly click the "Run" button to execute the script:
 
-![](https://user-images.githubusercontent.com/33433229/119191132-40a88980-ba4c-11eb-8d96-bdcf4313c2f8.png)
-
+![image](https://user-images.githubusercontent.com/33433229/119203569-55434c80-ba61-11eb-9d3d-f8449cd7dd40.png)
 
 >**NOTE**: that works for all PowerShell cmdlets and scripts using parameters !
 
