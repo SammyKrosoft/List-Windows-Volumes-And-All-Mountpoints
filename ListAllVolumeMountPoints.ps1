@@ -59,7 +59,8 @@
 #> 
 param (
 [string]$Server = "E2016-01",
-[string]$OutputFolder="c:\temp\"
+[string]$OutputFolder="c:\temp\",
+[switch]$CountEDBandLOGs
 )
     
 $OutputFile = $OutputFolder + "ListVolumesAndContents_$($Server)_$(Get-Date -F "dd-MM-yyy-hh-mm-ss").csv"
@@ -87,37 +88,39 @@ Foreach ($volume in $Vols){
 # Grouping volumes to have unique volumes and the list of mountpoints per volume
 $MountPointsGrouped = $VolCollection | Group-Object Volume
 
-
 $MountPointsCollection = @()
 # Storing the volume and its corresponding mountpoints in a custom variable
 Foreach ($MountPointVol in $MountPointsGrouped){
-    # Extracting first mountpoint just to do a Get-ChildItem on a valid folder...
-    $FirstMountPoint = $(If ($MountPointVol.Group.Mountpoint.count -gt 1){$MountPointVol.Group.Mountpoint[0]} Else {$MountPointVol.Group.Mountpoint})
 
-    Write-Host "parsing databse files on $FirstMountPoint, please wait..." -ForegroundColor Green
-    # NOW getting all EDB file under current mountpoint/volume...
-    $AllEDBFilesObjects = Get-ChildItem  "$($FirstMountPoint)\*.edb" -recurse
-    # Counting number of files
-    $NumberofEDBFileObjects = $AllEDBFilesObjects.count
-    Write-Host "Getting size of all EDB files, please wait..."
-    # Getting total EDB files sizes
-    $SizeofEDBFileObjects = $("{0:N2} GB" -f (($AllEDBFilesObjects | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1GB))
+    if ($CountEDBandLOGs){
+        # Extracting first mountpoint just to do a Get-ChildItem on a valid folder...
+        $FirstMountPoint = $(If ($MountPointVol.Group.Mountpoint.count -gt 1){$MountPointVol.Group.Mountpoint[0]} Else {$MountPointVol.Group.Mountpoint})
 
-    # Adding EDB files names as per Po's request
-    $EDBFilesFullNamesJoined = $AllEDBFilesObjects | ? {$_.Name -notlike "*tmp.edb*"}  | % {$_.FullName}
-    $EDBFilesFullNamesJoined = $EDBFilesFullNamesJoined -join ";"
-    $EDBFilesSimpleNamesJoined = $AllEDBFilesObjects | ? {$_.Name -notlike "*tmp.edb*"} | % {$_.Name}
-    $EDBFilesSimpleNamesJoined = $EDBFilesSimpleNamesJoined -join ";"
+        Write-Host "Parsing database files on $FirstMountPoint, please wait..." -ForegroundColor Green
+        # NOW getting all EDB file under current mountpoint/volume...
+        $AllEDBFilesObjects = Get-ChildItem  "$($FirstMountPoint)\*.edb" -recurse
+        # Counting number of files
+        $NumberofEDBFileObjects = $AllEDBFilesObjects.count
+        Write-Host "Getting size of all EDB files, please wait..."
+        # Getting total EDB files sizes
+        $SizeofEDBFileObjects = $("{0:N2} GB" -f (($AllEDBFilesObjects | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1GB))
 
-    #doing the same for LOG files...
-    Write-Host "parsing log files on $FirstMountPoint, please wait, this can take a VERY long time..." -ForegroundColor Green
-    # NOW getting all EDB file under current mountpoint/volume...
-    $AllLOGFilesObjects = Get-ChildItem  "$($FirstMountPoint)\*.log" -recurse
-    # Counting number of files
-    $NumberofLogFileObjects = $AllLOGFilesObjects.count
-    Write-Host "Getting size of all LOG files, please wait..."
-    # Getting total LOG files sizes
-    $SizeofLOGFileObjects = $("{0:N2} GB" -f (($AllLOGFilesObjects | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1GB))
+        # Adding EDB files names as per Po's request
+        $EDBFilesFullNamesJoined = $AllEDBFilesObjects | ? {$_.Name -notlike "*tmp.edb*"}  | % {$_.FullName}
+        $EDBFilesFullNamesJoined = $EDBFilesFullNamesJoined -join ";"
+        $EDBFilesSimpleNamesJoined = $AllEDBFilesObjects | ? {$_.Name -notlike "*tmp.edb*"} | % {$_.Name}
+        $EDBFilesSimpleNamesJoined = $EDBFilesSimpleNamesJoined -join ";"
+
+        #doing the same for LOG files...
+        Write-Host "Parsing log files on $FirstMountPoint, please wait, this can take a VERY long time..." -ForegroundColor Green
+        # NOW getting all EDB file under current mountpoint/volume...
+        $AllLOGFilesObjects = Get-ChildItem  "$($FirstMountPoint)\*.log" -recurse
+        # Counting number of files
+        $NumberofLogFileObjects = $AllLOGFilesObjects.count
+        Write-Host "Getting size of all LOG files, please wait..."
+        # Getting total LOG files sizes
+        $SizeofLOGFileObjects = $("{0:N2} GB" -f (($AllLOGFilesObjects | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1GB))
+    }
 
 
     # Now populating properties of the collection (Server/Volume/Mountpoints/NumberOfEDB/SizeOfEDB)
@@ -125,12 +128,15 @@ Foreach ($MountPointVol in $MountPointsGrouped){
         Server = $(if($MountPointVol.Group.Server.count -eq 1){$MountPointVol.Group.Server}else{$MountPointVol.Group.Server[0]})
         Volume = $MountPointVol.Name.split('"')[1].Replace('\\', '\')
         Mountpoints = $MountPointVol.Group.Mountpoint.Replace('\\', '\') -join ";"
-        NumberOfEDBFiles = $NumberofEDBFileObjects
-        SizeOfEDBFiles = $SizeofEDBFileObjects
-        NumberOfLOGFiles = $NumberofLogFileObjects
-        SizeofLOGFiles = $SizeofLOGFileObjects
-        EDBFilesFullPath = $EDBFilesFullNamesJoined
-        EDBFilesNames = $EDBFilesSimpleNamesJoined
+    }
+
+    If ($CountEDBandLOGs){
+        $Hash.add("NumberOfEDBFiles" , "$NumberofEDBFileObjects")
+        $Hash.add("SizeOfEDBFiles" , "$SizeofEDBFileObjects")
+        $Hash.add("NumberOfLOGFiles" , "$NumberofLogFileObjects")
+        $Hash.add("SizeofLOGFiles" , "$SizeofLOGFileObjects")
+        $Hash.add("EDBFilesFullPath" , "$EDBFilesFullNamesJoined")
+        $Hash.add("EDBFilesNames" , "$EDBFilesSimpleNamesJoined")
     }
 
     $MountPointsCollection += [pscustomobject]$Hash
@@ -140,10 +146,14 @@ Foreach ($MountPointVol in $MountPointsGrouped){
     
 #Display mountpoint collection on screen
 Write-host "Export saved on $OutputFile" -backgroundColor DarkRed -ForegroundColor White
-$MountPointsCollection | select Server, volume, mountpoints,NumberOfEDBFiles, SizeOfEDBFiles, NumberOfLOGFiles, SizeofLOGFiles,EDBFilesFullPath,EDBFilesNames | Export-csv -NoTypeInformation $OutputFile
-return $MountPointsCollection | select Server, volume, mountpoints,NumberOfEDBFiles, SizeOfEDBFiles, NumberOfLOGFiles, SizeofLOGFiles,EDBFilesFullPath,EDBFilesNames
+If ($CountEDBandLOGs){
+    $MountPointsCollection | select Server, volume, mountpoints,NumberOfEDBFiles, SizeOfEDBFiles, NumberOfLOGFiles, SizeofLOGFiles,EDBFilesFullPath,EDBFilesNames | Export-csv -NoTypeInformation $OutputFile
+    return $MountPointsCollection | select Server, volume, mountpoints,NumberOfEDBFiles, SizeOfEDBFiles, NumberOfLOGFiles, SizeofLOGFiles,EDBFilesFullPath,EDBFilesNames
+} Else {
+    $MountPointsCollection | select Server, volume, mountpoints | Export-csv -NoTypeInformation $OutputFile
+    return $MountPointsCollection | select Server, volume, mountpoints
+}
 
-  
 
 <#If you make the above a function, use it like below :
 
