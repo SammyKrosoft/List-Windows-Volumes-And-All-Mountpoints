@@ -5,6 +5,19 @@ This script will list Windows Mountpoints (other than Root drives) for each volu
 
 Right-Click and chose "Save Link As" to save the current script on your hard drive:
 
-![image](https://user-images.githubusercontent.com/33433229/119163803-bfd89600-ba29-11eb-87a0-d3436370049b.png)
-
 [ListAllVolumeMountPoints.ps1](https://raw.githubusercontent.com/SammyKrosoft/List-Windows-Volumes-And-All-Mountpoints/main/ListAllVolumeMountPoints.ps1)
+
+# Usage
+
+```powershell
+.\ListVolumeAndContents.ps1 -Server "E2016-01" | ft
+```
+
+Sample output:
+
+![image](https://user-images.githubusercontent.com/33433229/119164649-a421bf80-ba2a-11eb-8fa2-9d1a834af576.png)
+
+
+in Red on the above output sample you can see the output file location:
+![image](https://user-images.githubusercontent.com/33433229/119164854-d501f480-ba2a-11eb-9975-3bad028f8855.png)
+
