@@ -13,6 +13,18 @@ Right-Click and chose "Save Link As" to save the current script on your hard dri
 .\ListVolumeAndContents.ps1 -Server "E2016-01" | ft
 ```
 
+> Hint: type the following on Windows PowerAhell :
+
+```powershell
+Show-Command .\ListVolumeAndContents.ps1
+```
+
+>And you'll be presented a sort of GUI helping you to fill the parameters:
+
+![image](https://user-images.githubusercontent.com/33433229/119179800-5f535400-ba3d-11eb-8902-3cc9192d7b82.png)
+
+>**NOTE**: that works for all PowerShell cmdlets and scripts using parameters !
+
 Sample output:
 
 ![image](https://user-images.githubusercontent.com/33433229/119164649-a421bf80-ba2a-11eb-8fa2-9d1a834af576.png)
