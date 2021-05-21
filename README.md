@@ -45,3 +45,4 @@ The file is stored as indicated on the console output. Here's a simple content f
 
 And you can format by copy/pasting the content or directly opening the CSV in Excel:
 
+![image](https://user-images.githubusercontent.com/33433229/119181179-3c29a400-ba3f-11eb-98e4-b431a74257cc.png)
