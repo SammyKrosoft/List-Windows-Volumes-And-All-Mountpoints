@@ -1,5 +1,5 @@
 # List-Windows-Volumes-And-All-Mountpoints
-This script will list Windows Mountpoints (other than Root drives) for each volumes on a given server or workstation
+This script will list Windows Mountpoints (other than Root drives) for each volumes on a given server or workstation. Also, it will count and display total size of EDB and LOG files (for Exchange Server) on each volume.
 
 # Download the current version of this repository here
 
