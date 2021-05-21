@@ -21,7 +21,8 @@ Show-Command .\ListVolumeAndContents.ps1
 
 >And you'll be presented a sort of GUI helping you to fill the parameters and directly click the "Run" button to execute the script:
 
-![image](https://user-images.githubusercontent.com/33433229/119180072-cc66e980-ba3d-11eb-9074-549cb725414e.png)
+![image](https://user-images.githubusercontent.com/33433229/119191132-40a88980-ba4c-11eb-8d96-bdcf4313c2f8.png)
+
 
 >**NOTE**: that works for all PowerShell cmdlets and scripts using parameters !
 
