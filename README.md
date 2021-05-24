@@ -1,6 +1,6 @@
 # List-Windows-Volumes-And-All-Mountpoints
 This script will list Windows Mountpoints (other than Root drives) for each volume on a given server or workstation. 
-Also, optionnally with the ```-CountEDBandLOGs``` switch, it will count and display total size of EDB and LOG files (for Exchange Server) on each volume.
+Also, optionnally with the ```-CountEDBandLOGs``` switch, it will count and display total size of EDB and LOG files (for Exchange Server) on each volume. I added this switch because initially this script was requested by an Exchange architect to be able to check the disk and mount points mappings on an Exchange server, along with the list of EDB (database) files and their total size per volume, and the amount of transaction log files per volume (.LOG files - the script doesnt list these as there can be thousants of these generated per day for busy environments).
 
 # Download the current version of this repository here
 
