@@ -20,7 +20,7 @@ Right-Click and chose "Save Link As" to save the current script on your hard dri
 .\ListVolumeAndContents.ps1 -OutputFolder c:\temp\ -Server E2016-01
 ```
 
-> Hint: type the following on Windows PowerAhell :
+> **Hint**: type the following on Windows PowerShell :
 
 ```powershell
 Show-Command .\ListVolumeAndContents.ps1
