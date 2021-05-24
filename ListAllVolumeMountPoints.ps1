@@ -72,9 +72,9 @@ param (
 )
 
 If($($Servers.count) -gt 1){
-    $OutputFile = $OutputFolder + "ListVolumesAndContents_$($Server[0])_MultipleServers_$(Get-Date -F "dd-MM-yyy-hh-mm-ss").csv"
+    $OutputFile = $OutputFolder + "ListVolumesAndContents_$($Servers[0])_MultipleServers_$(Get-Date -F "dd-MM-yyy-hh-mm-ss").csv"
 } Else {
-    $OutputFile = $OutputFolder + "ListVolumesAndContents_$($Server)_$(Get-Date -F "dd-MM-yyy-hh-mm-ss").csv"
+    $OutputFile = $OutputFolder + "ListVolumesAndContents_$($Servers)_$(Get-Date -F "dd-MM-yyy-hh-mm-ss").csv"
 }
 
 # Initializing Volume collection variable
