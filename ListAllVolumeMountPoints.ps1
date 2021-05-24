@@ -114,6 +114,9 @@ Foreach ($Server in $Servers){
 
             Write-Host "Parsing database files on $FirstMountPoint, please wait..." -ForegroundColor Green
             # NOW getting all EDB file under current mountpoint/volume...
+            #Replacing $FirstMountPoint from local path to UNC path (replace C:\ with C$\) and add \\SErverName before the path
+            $UNCMountPoint = $FirstMountPoint -Replace ":\\","$\"
+            $UNCMountPoint = "\\$Server\" + $UNCMountPoint
             $AllEDBFilesObjects = Get-ChildItem  "$($FirstMountPoint)\*.edb" -recurse
             # Counting number of files
             $NumberofEDBFileObjects = $AllEDBFilesObjects.count
