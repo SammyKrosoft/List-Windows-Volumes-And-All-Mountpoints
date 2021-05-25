@@ -12,13 +12,15 @@ Right-Click and chose "Save Link As" to save the current script on your hard dri
 
 - To export the volumes, all their mointpoints and the EDB and LOG files stats (can be long):
 ```powershell
-.\ListVolumeAndContents.ps1 -OutputFolder c:\temp\ -Server E2016-01 -CountEDBandLOGs
+.\ListVolumeAndContents.ps1 -OutputFolder c:\temp\ -Servers E2016-01, E2016-02 -CountEDBandLOGs
 ```
 
 - To export only the volumes and all their mointpoints (very fast):
 ```powershell
-.\ListVolumeAndContents.ps1 -OutputFolder c:\temp\ -Server E2016-01
+.\ListVolumeAndContents.ps1 -OutputFolder c:\temp\ -Servers E2016-01, E2016-02
 ```
+
+
 
 > **Hint**: type the following on Windows PowerShell :
 
